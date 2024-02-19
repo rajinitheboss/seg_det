@@ -1,30 +1,57 @@
-
-import {useState} from "react";
-import {Button} from 'react-bootstrap';
-
+import React,{useState} from "react";
+import {Button} from "react-bootstrap";
+import axios from "axios";
+import Loader from "./Loader";
 
 function Segmenter(){
 
-    const [segmeter,setSegmenter] = useState('Model');
-
+    const [segmeter,setdetector] = useState('Model');
     const [file, setFile] = useState<File | null>(null);
-    const [imagePreviewUrl, setImagePreviewUrl] = useState<string>('');
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const [finalUrl,setFinalUrl] = useState<string | null>(null);
+    const [isLoading,setIsLoading] = useState<boolean> (false);
 
-    // const handleImageChange = (e: React.ChangeEvent<HTMLInputElement> ) => {
-    //     e.preventDefault();
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files[0]) {
+            const selectedFile = event.target.files[0];
+            setFile(selectedFile);
+            const filePreviewUrl = URL.createObjectURL(selectedFile);
+            setPreviewUrl(filePreviewUrl);
+          }
+    };
 
-    //     let reader = new FileReader();
-    //     let selectedFile = e.target.files[0];
+    const handleUpload = async () => {
+        if (!file) {
+            alert('Please select a file first!');
+            return;
+        }
 
-    //     reader.onloadend = () => {
-    //         setFile(selectedFile);
-    //         setImagePreviewUrl(reader.result);
-    //     }
+        const formData = new FormData();
+        formData.append('file', file); // The 'file' corresponds to the key expected on the backend
 
-    //     if (selectedFile) {
-    //         reader.readAsDataURL(selectedFile);
-    //     }
-    // }
+        try {
+
+            setIsLoading(true)
+            const response = await axios.post('http://localhost:5000/upload_segment', formData, {
+                headers: {
+                'Content-Type': 'multipart/form-data',
+                },
+                responseType: 'blob',
+            });
+            console.log('File uploaded successfully', response);
+            setIsLoading(false);
+            const blob = new Blob([response.data], { type: 'image/png' })
+            const responseImageUrl = URL.createObjectURL(blob);
+            setFinalUrl(responseImageUrl)
+
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                console.error('Error uploading file', error.message);
+            } else {
+                console.error('An unexpected error occurred', error);
+            }
+        }
+    };
 
     return(
         <div className="full-width-container">
@@ -37,18 +64,21 @@ function Segmenter(){
                             {segmeter}
                         </button>
                         <div className="dropdown-menu" >
-                            <p className="dropdown-item" onClick={()=> setSegmenter('segmenter1')}>segmenter 1</p>
-                            <p className="dropdown-item" onClick={() => setSegmenter('segmenter2')}>segmenter 2</p>
-                            <p className="dropdown-item" onClick = {() => setSegmenter('segmenter3')}>segmenter 3</p>
+                            <p className="dropdown-item" onClick={()=> setdetector('detector1')}> Detector 1</p>
+                            <p className="dropdown-item" onClick={() => setdetector('detector2')}>Detector 2</p>
+                            <p className="dropdown-item" onClick = {() => setdetector('detector3')}>Detector 3</p>
                         </div>
                     </div>
                 </div>
             </div>
-            {/* <div className="row">
-                <input type="file" onChange={handleImageChange} />
-            </div> */}
             <div className="row">
-                <img src="https://ultralytics.com/images/bus.jpg" alt = '' width='500px' height='500px'></img>
+                {(previewUrl)?
+                 <img src={previewUrl} alt="Preview" style={{ width: '100%', marginTop: '20px' }} />
+                :
+                    <div className="col">
+                        <h3> Select a Image for Segmentation </h3>
+                    </div>
+                }
             </div>
             <div className = 'row'>
                 <div className='col-4'>
@@ -57,7 +87,7 @@ function Segmenter(){
                 <div className='col-4'>
                     <div className="mb-3">
                         <label className="form-label">choose the photo you want to run the model</label>
-                        <input className="form-control" type="file" id="formFile" accept="image/*" />
+                        <input className="form-control" type="file" id="formFile" accept="image/*" onChange={handleFileChange}/>
                     </div>
                 </div>
 
@@ -66,10 +96,23 @@ function Segmenter(){
             <div className="row">
                 <div className = 'col-4'></div>
                 <div className = 'col-4'>
-                    <Button> Segment </Button>
+                    <Button onClick={handleUpload} > Segment </Button>
                 </div>
                 <div className = 'col-4'></div>
             </div>
+            <div className="row">
+                <div className="col">
+                    {
+                        (finalUrl)?
+                        <img src = {finalUrl} alt = 'image_after_segmentation' style={{ width: '100%', marginTop: '20px' }} />
+                        : null
+                    }
+                </div>
+            </div>
+            {
+                isLoading?<Loader/>
+                : null
+            }
         </div>
     )
 }

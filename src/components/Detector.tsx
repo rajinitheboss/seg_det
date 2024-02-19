@@ -1,13 +1,15 @@
 import React,{useState} from "react";
 import {Button} from "react-bootstrap";
 import axios from "axios";
+import Loader from "./Loader";
 
 function Detector(){
 
-    const [segmeter,setdetector] = useState('Model');
+    const [detector,setdetector] = useState('Model');
     const [file, setFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [finalUrl,setFinalUrl] = useState<string | null>(null);
+    const [isLoading,setIsLoading] = useState<boolean>(false);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
@@ -28,12 +30,14 @@ function Detector(){
         formData.append('file', file); // The 'file' corresponds to the key expected on the backend
 
         try {
-            const response = await axios.post('http://localhost:5000/upload', formData, {
+            setIsLoading(true);
+            const response = await axios.post('http://localhost:5000/upload_detect', formData, {
                 headers: {
                 'Content-Type': 'multipart/form-data',
                 },
                 responseType: 'blob',
             });
+            setIsLoading(false);
             console.log('File uploaded successfully', response);
             const blob = new Blob([response.data], { type: 'image/png' })
             const responseImageUrl = URL.createObjectURL(blob);
@@ -56,7 +60,7 @@ function Detector(){
                 <div className = 'col-8'>
                     <div className="btn-group">
                         <button type="button" className="btn btn-info dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {segmeter}
+                            {detector}
                         </button>
                         <div className="dropdown-menu" >
                             <p className="dropdown-item" onClick={()=> setdetector('detector1')}> Detector 1</p>
@@ -104,6 +108,11 @@ function Detector(){
                     }
                 </div>
             </div>
+            {
+                isLoading?
+                <Loader/>
+                : null
+            }
         </div>
     )
 }
