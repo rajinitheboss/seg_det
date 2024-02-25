@@ -1,15 +1,18 @@
-import React,{useState} from "react";
-import {Button} from "react-bootstrap";
+import React,{useState,useEffect} from "react";
+import {Alert, Button} from "react-bootstrap";
 import axios from "axios";
 import Loader from "./Loader";
+import '../stylings/Segmenter.css';
+import AlertMessageBox from "./AlertMessageBox";
 
 function Segmenter(){
 
-    const [segmeter,setdetector] = useState('Model');
+    const [segmeter,setSegmenter] = useState('Model');
     const [file, setFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [finalUrl,setFinalUrl] = useState<string | null>(null);
     const [isLoading,setIsLoading] = useState<boolean> (false);
+    const [alertMessage,setAlertMessage] = useState<string> ('');
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
@@ -20,14 +23,23 @@ function Segmenter(){
           }
     };
 
+
+    useEffect(() => {
+        setTimeout(() => {
+            setAlertMessage("");
+        },5000)
+    },[alertMessage])
+
+
     const handleUpload = async () => {
         if (!file) {
-            alert('Please select a file first!');
+            setAlertMessage('Please select a file first!');
             return;
         }
 
         const formData = new FormData();
-        formData.append('file', file); // The 'file' corresponds to the key expected on the backend
+        formData.append('file', file); 
+        formData.append('model',segmeter);
 
         try {
 
@@ -45,6 +57,7 @@ function Segmenter(){
             setFinalUrl(responseImageUrl)
 
         } catch (error) {
+            setIsLoading(false);
             if (axios.isAxiosError(error)) {
                 console.error('Error uploading file', error.message);
             } else {
@@ -64,16 +77,18 @@ function Segmenter(){
                             {segmeter}
                         </button>
                         <div className="dropdown-menu" >
-                            <p className="dropdown-item" onClick={()=> setdetector('detector1')}> Detector 1</p>
-                            <p className="dropdown-item" onClick={() => setdetector('detector2')}>Detector 2</p>
-                            <p className="dropdown-item" onClick = {() => setdetector('detector3')}>Detector 3</p>
+                            <p className="dropdown-item" onClick={()=> setSegmenter('SAM')}> SAM </p>
+                            <p className="dropdown-item" onClick={() => setSegmenter('M_RCNN')}>M_RCNN</p>
+                            <p className="dropdown-item" onClick = {() => setSegmenter('detector3')}>Detector 3</p>
                         </div>
                     </div>
                 </div>
             </div>
             <div className="row">
                 {(previewUrl)?
-                 <img src={previewUrl} alt="Preview" style={{ width: '100%', marginTop: '20px' }} />
+                    <div className="image-container">
+                        <img src={previewUrl} alt="Uploaded" className="resizable-image" />
+                    </div>
                 :
                     <div className="col">
                         <h3> Select a Image for Segmentation </h3>
@@ -104,7 +119,17 @@ function Segmenter(){
                 <div className="col">
                     {
                         (finalUrl)?
-                        <img src = {finalUrl} alt = 'image_after_segmentation' style={{ width: '100%', marginTop: '20px' }} />
+                            <div className="image-container">
+                                <img src={finalUrl} alt="segmentedImage" className="resizable-image" />
+                            </div>
+                        : null
+                    }
+                </div>
+            </div>
+            <div className = 'row'>
+                <div className = 'col'>
+                    {(alertMessage !== '')?
+                        <AlertMessageBox message={alertMessage} />
                         : null
                     }
                 </div>

@@ -1,7 +1,9 @@
-import React,{useState} from "react";
+import React,{useState,useEffect} from "react";
 import {Button} from "react-bootstrap";
 import axios from "axios";
 import Loader from "./Loader";
+import '../stylings/Segmenter.css';
+import AlertMessageBox from "./AlertMessageBox";
 
 function Detector(){
 
@@ -10,6 +12,7 @@ function Detector(){
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [finalUrl,setFinalUrl] = useState<string | null>(null);
     const [isLoading,setIsLoading] = useState<boolean>(false);
+    const [alertMessage,setAlertMessage] = useState<string> ('');
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
@@ -20,14 +23,21 @@ function Detector(){
           }
     };
 
+    useEffect(() => {
+        setTimeout(() => {
+            setAlertMessage("");
+        },5000)
+    },[alertMessage])
+
     const handleUpload = async () => {
         if (!file) {
-            alert('Please select a file first!');
+            setAlertMessage('Please select a file first!');
             return;
         }
 
         const formData = new FormData();
-        formData.append('file', file); // The 'file' corresponds to the key expected on the backend
+        formData.append('file', file); 
+        formData.append('model',detector);
 
         try {
             setIsLoading(true);
@@ -44,6 +54,8 @@ function Detector(){
             setFinalUrl(responseImageUrl)
 
         } catch (error) {
+            setIsLoading(false)
+            setAlertMessage('Error in uploading the image ')
             if (axios.isAxiosError(error)) {
                 console.error('Error uploading file', error.message);
             } else {
@@ -63,16 +75,18 @@ function Detector(){
                             {detector}
                         </button>
                         <div className="dropdown-menu" >
-                            <p className="dropdown-item" onClick={()=> setdetector('detector1')}> Detector 1</p>
-                            <p className="dropdown-item" onClick={() => setdetector('detector2')}>Detector 2</p>
+                            <p className="dropdown-item" onClick={()=> setdetector('Yolov8')}> Yolov8 </p>
+                            <p className="dropdown-item" onClick={() => setdetector('Free Solo')}>Free Solo</p>
                             <p className="dropdown-item" onClick = {() => setdetector('detector3')}>Detector 3</p>
                         </div>
                     </div>
                 </div>
             </div>
-            <div className="row">
+            <div className="row" style={{alignItems: 'center'}}>
                 {(previewUrl)?
-                 <img src={previewUrl} alt="Preview" style={{ width: '100%', marginTop: '20px' }} />
+                    <div className="image-container">
+                        <img src={previewUrl} alt="Uploaded" className="resizable-image" />
+                    </div>
                 :
                     <div className="col">
                         <h3> Select a Image for Detection </h3>
@@ -103,7 +117,17 @@ function Detector(){
                 <div className="col">
                     {
                         (finalUrl)?
-                        <img src = {finalUrl} alt = 'image_after_detection' style={{ width: '100%', marginTop: '20px' }} />
+                            <div className="image-container">
+                                <img src={finalUrl} alt="Uploaded" className="resizable-image" />
+                            </div>
+                        : null
+                    }
+                </div>
+            </div>
+            <div className = 'row'>
+                <div className = 'col'>
+                    {(alertMessage !== '')?
+                        <AlertMessageBox message={alertMessage} />
                         : null
                     }
                 </div>

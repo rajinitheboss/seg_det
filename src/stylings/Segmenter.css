@@ -1,0 +1,16 @@
+
+.image-container {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.resizable-image {
+    max-width: 100%;
+    max-height: 75vh; 
+    height: auto;
+    width: auto;
+}
