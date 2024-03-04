@@ -4,6 +4,8 @@ import axios from "axios";
 import Loader from "./Loader";
 import '../stylings/Segmenter.css';
 import AlertMessageBox from "./AlertMessageBox";
+import DropDown from "./DropDownSegmenter";
+import GridView from "./GridView";
 
 function Segmenter(){
 
@@ -13,6 +15,7 @@ function Segmenter(){
     const [finalUrl,setFinalUrl] = useState<string | null>(null);
     const [isLoading,setIsLoading] = useState<boolean> (false);
     const [alertMessage,setAlertMessage] = useState<string> ('');
+    const [showGridView,setShowGridView] = useState<boolean> (false);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
@@ -20,7 +23,7 @@ function Segmenter(){
             setFile(selectedFile);
             const filePreviewUrl = URL.createObjectURL(selectedFile);
             setPreviewUrl(filePreviewUrl);
-          }
+        }
     };
 
 
@@ -72,16 +75,7 @@ function Segmenter(){
                 <div className = 'col-2'>
                 </div>
                 <div className = 'col-8'>
-                    <div className="btn-group">
-                        <button type="button" className="btn btn-info dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {segmeter}
-                        </button>
-                        <div className="dropdown-menu" >
-                            <p className="dropdown-item" onClick={()=> setSegmenter('SAM')}> SAM </p>
-                            <p className="dropdown-item" onClick={() => setSegmenter('M_RCNN')}>M_RCNN</p>
-                            <p className="dropdown-item" onClick = {() => setSegmenter('detector3')}>Detector 3</p>
-                        </div>
-                    </div>
+                    <DropDown dropDownMessage={segmeter}  changeFunction={setSegmenter}/>
                 </div>
             </div>
             <div className="row">
@@ -125,6 +119,23 @@ function Segmenter(){
                         : null
                     }
                 </div>
+            </div>
+            <div className="row">
+                <div className = 'col-4'></div>
+                <div className = 'col-4'>
+                    <Button onClick={() => {setShowGridView(true)}} > Compare Results </Button>
+                </div>
+                <div className = 'col-4'></div>
+            </div>
+            <div >
+                {
+                    (showGridView === true)?
+                        <div id = 'gridView'>
+                            <GridView closeFunction={setShowGridView} />
+                        </div>
+                    : 
+                    null
+                }
             </div>
             <div className = 'row'>
                 <div className = 'col'>
