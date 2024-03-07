@@ -35,6 +35,11 @@ function Detector(){
             return;
         }
 
+        if(detector === '' || detector === 'Model'){
+            setAlertMessage('Select a Model to run the image ');
+            return;
+        }
+
         const formData = new FormData();
         formData.append('file', file); 
         formData.append('model',detector);
@@ -77,7 +82,7 @@ function Detector(){
                         <div className="dropdown-menu" >
                             <p className="dropdown-item" onClick={()=> setdetector('Yolov8')}> Yolov8 </p>
                             <p className="dropdown-item" onClick={() => setdetector('Free Solo')}>Free Solo</p>
-                            <p className="dropdown-item" onClick = {() => setdetector('detector3')}>Detector 3</p>
+                            <p className="dropdown-item" onClick = {() => setdetector('DETR')}>DETR</p>
                         </div>
                     </div>
                 </div>

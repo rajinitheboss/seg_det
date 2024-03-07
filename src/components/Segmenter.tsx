@@ -9,7 +9,7 @@ import GridView from "./GridView";
 
 function Segmenter(){
 
-    const [segmeter,setSegmenter] = useState('Model');
+    const [segmenter,setSegmenter] = useState('Model');
     const [file, setFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [finalUrl,setFinalUrl] = useState<string | null>(null);
@@ -40,9 +40,14 @@ function Segmenter(){
             return;
         }
 
+        if(segmenter === '' || segmenter === 'Model'){
+            setAlertMessage('Select a Model to run the image ');
+            return;
+        }
+
         const formData = new FormData();
         formData.append('file', file); 
-        formData.append('model',segmeter);
+        formData.append('model',segmenter);
 
         try {
 
