@@ -4,6 +4,7 @@ import axios from "axios";
 import Loader from "./Loader";
 import '../stylings/Segmenter.css';
 import AlertMessageBox from "./AlertMessageBox";
+import DropDownDetector from "./DropDownDetector";
 
 function Detector(){
 
@@ -13,6 +14,7 @@ function Detector(){
     const [finalUrl,setFinalUrl] = useState<string | null>(null);
     const [isLoading,setIsLoading] = useState<boolean>(false);
     const [alertMessage,setAlertMessage] = useState<string> ('');
+    const [showGridView,setShowGridView] = useState<boolean> (false);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
@@ -74,17 +76,8 @@ function Detector(){
             <div className = 'row'>
                 <div className = 'col-2'>
                 </div>
-                <div className = 'col-8'>
-                    <div className="btn-group">
-                        <button type="button" className="btn btn-info dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {detector}
-                        </button>
-                        <div className="dropdown-menu" >
-                            <p className="dropdown-item" onClick={()=> setdetector('Yolov8')}> Yolov8 </p>
-                            <p className="dropdown-item" onClick={() => setdetector('Free Solo')}>Free Solo</p>
-                            <p className="dropdown-item" onClick = {() => setdetector('DETR')}>DETR</p>
-                        </div>
-                    </div>
+                <div className = 'col-8' style={{margin:'10px'}} >
+                    <DropDownDetector dropDownMessage={detector}  changeFunction={setdetector}/>
                 </div>
             </div>
             <div className="row" style={{alignItems: 'center'}}>
@@ -118,6 +111,23 @@ function Detector(){
                 </div>
                 <div className = 'col-4'></div>
             </div>
+            {/* <div className="row">
+                <div className = 'col-4'></div>
+                <div className = 'col-4' style={{marginTop:'5px'}}>
+                    <Button onClick={() => {setShowGridView(true)}} > Compare Results </Button>
+                </div>
+                <div className = 'col-4'></div>
+            </div>
+            <div >
+                {
+                    (showGridView === true)?
+                        <div id = 'gridView'>
+                            <GridViewDetector closeFunction={setShowGridView} />
+                        </div>
+                    : 
+                    null
+                }
+            </div> */}
             <div className="row">
                 <div className="col">
                     {
@@ -139,7 +149,7 @@ function Detector(){
             </div>
             {
                 isLoading?
-                <Loader/>
+                    <Loader/>
                 : null
             }
         </div>

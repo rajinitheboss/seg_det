@@ -4,8 +4,7 @@ import axios from "axios";
 import Loader from "./Loader";
 import '../stylings/Segmenter.css';
 import AlertMessageBox from "./AlertMessageBox";
-import DropDown from "./DropDownSegmenter";
-import GridView from "./GridView";
+import DropDownSegmenter from "./DropDownSegmenter";
 
 function Segmenter(){
 
@@ -79,8 +78,8 @@ function Segmenter(){
             <div className = 'row'>
                 <div className = 'col-2'>
                 </div>
-                <div className = 'col-8'>
-                    <DropDown dropDownMessage={segmeter}  changeFunction={setSegmenter}/>
+                <div className = 'col-8' style={{margin:'10px'}}>
+                    <DropDownSegmenter dropDownMessage={segmenter}  changeFunction={setSegmenter}/>
                 </div>
             </div>
             <div className="row">
@@ -125,7 +124,7 @@ function Segmenter(){
                     }
                 </div>
             </div>
-            <div className="row">
+            {/* <div className="row">
                 <div className = 'col-4'></div>
                 <div className = 'col-4'>
                     <Button onClick={() => {setShowGridView(true)}} > Compare Results </Button>
@@ -135,13 +134,13 @@ function Segmenter(){
             <div >
                 {
                     (showGridView === true)?
-                        <div id = 'gridView'>
-                            <GridView closeFunction={setShowGridView} />
+                        <div id = 'gridView' style={{marginTop:'5px'}}>
+                            <GridViewSegmenter closeFunction={setShowGridView} />
                         </div>
                     : 
                     null
                 }
-            </div>
+            </div> */}
             <div className = 'row'>
                 <div className = 'col'>
                     {(alertMessage !== '')?
