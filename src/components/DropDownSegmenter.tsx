@@ -16,6 +16,8 @@ function DropDownSegmenter(props:DropDownSegmenterProps) {
                 <p className="dropdown-item" onClick={()=> props.changeFunction('SAM')}> SAM </p>
                 <p className="dropdown-item" onClick={() => props.changeFunction('M_RCNN')}>M_RCNN</p>
                 <p className="dropdown-item" onClick = {() => props.changeFunction('CA-Net')}>CA-NET(only for skin cells)</p>
+                <p className = 'dropdown-item' onClick = {() => props.changeFunction('celldetection')}> Cell Detection </p>
+                <p className = 'dropdown-item' onClick = {() => props.changeFunction('UNET')}> UNET </p>
             </div>
         </div>
     )

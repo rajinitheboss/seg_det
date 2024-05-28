@@ -1,0 +1,23 @@
+.footer {
+    background-color: #057cf3;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .logo {
+    width: 50px; /* Adjust size as needed */
+    height: auto; /* Maintain aspect ratio */
+  }
+  
+  @media (max-width: 768px) {
+    .footer-content {
+      flex-direction: column;
+    }
+  }
+  

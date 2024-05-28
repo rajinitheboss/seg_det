@@ -20,6 +20,8 @@ function DropDownGridView(props:DropDownSegmenterProps) {
                 <p className="dropdown-item" onClick={() => props.changeFunction('Free Solo')}> Free Solo </p>
                 <p className="dropdown-item" onClick = {() => props.changeFunction('DETR')}> DETR </p>
                 <p className="dropdown-item" onClick = {() => props.changeFunction('SAHI')}> SAHI </p>
+                <p className='dropdown-item' onClick = {() => props.changeFunction('EfficientDet')} > EfficientDet </p>
+                <p className = 'dropdown-item' onClick = {() => props.changeFunction('RetinaNet')}> RetinaNet </p>
                 
             </div>
         </div>

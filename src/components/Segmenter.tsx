@@ -67,9 +67,12 @@ function Segmenter(){
             setIsLoading(false);
             if (axios.isAxiosError(error)) {
                 console.error('Error uploading file', error.message);
+                setAlertMessage('unable to get the requested data');
             } else {
                 console.error('An unexpected error occurred', error);
+                setAlertMessage('An unexpected error occurred');
             }
+            setFinalUrl(null);
         }
     };
 

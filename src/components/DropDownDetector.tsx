@@ -17,7 +17,9 @@ function DropDownDetector(props:DropDownSegmenterProps) {
                 <p className="dropdown-item" onClick={() => props.changeFunction('Free Solo')}> Free Solo </p>
                 <p className="dropdown-item" onClick = {() => props.changeFunction('DETR')}> DETR </p>
                 <p className="dropdown-item" onClick = {() => props.changeFunction('SAHI')}> SAHI </p>
-                
+                <p className = 'dropdown-item' onClick = {() => props.changeFunction('EfficientDet')}> EfficientDet </p>
+                <p className = 'dropdown-item' onClick = {() => props.changeFunction('RetinaNet')}> RetinaNet </p>
+                <p className = 'dropdown-item' onClick = {() => props.changeFunction('YOLOv8_FT')}> YOLOv8_FT </p>
             </div>
         </div>
     )
