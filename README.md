@@ -2,6 +2,10 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+# Adding a extra Detector or Segmentor 
+
+To add a module just add an detector extra line to "DropDownDetector.tsx", similarly add a extra line to "DropDownSegmenter.tsx" for including a segmenter. If you want to add the model to the "compare results" component the the model name to the "DropDownGridView.tsx" file.  
+
 ## Available Scripts
 
 In the project directory, you can run:
